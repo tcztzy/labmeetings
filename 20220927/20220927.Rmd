@@ -1,0 +1,70 @@
+---
+title: "Lab meeting"
+author: "Tang, Ziya"
+date: "2022-09-27"
+output: powerpoint_presentation
+---
+
+```{r setup, include=FALSE}
+library(reticulate)
+knitr::opts_chunk$set(echo = FALSE)
+reticulate::use_python("/Users/tcztzy/miniconda3/envs/ancestry/bin/python")
+```
+
+## Overlook
+
+What did I do last week?
+
+- `Relate`
+  * I wrote a wrapper for Python.
+  * I plot the phylogenetic tree.
+- `MSMC`
+  * I got the 5 samples as a single group
+  * I plot the effective population size
+
+What's my plan next week?
+
+- Further study for `Relate` and `MSMC`
+
+## Relate Notes
+
+1. Relate analysis for each chromosome, since it requires SNP position increasingly sorted.
+2. Rice genomes are actually diploid, but breeding programs frequently work with doubled haploids. If the parameter `--rice` is omitted, Relate will consider the sample population size twice. e.g. the data Gan provided will be considered as 10 samples.
+3. [Missing genotype call is not permitted in Oxford phased haploid file `.haps`](https://www.cog-genomics.org/plink/2.0/formats#haps). In `Relate` preprocessing procedures, it is just omit the missing genotype.
+4. [MareyMap](https://lbbe-shiny.univ-lyon1.fr/MareyMapOnline/) is used to estimate the genetic map.
+5. Mutation rate estimation influence the year group separated.
+
+```{python}
+import subprocess
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+
+plotcoords = pd.read_table("chr01_173923.plotcoords", sep=r"\s+")
+
+fig, ax = plt.subplots(1, 1)
+for _, row in plotcoords.iterrows():
+    ax.plot(
+        row[["x_begin", "x_end"]],
+        row[["y_begin", "y_end"]],
+        color="gray",
+    )
+ax.set_yscale("log")
+plt.show()
+```
+## MSMC
+
+1. MSMC recommended trio (parents and child) inputs
+2. `generate_multihetsep.py` take samples in separated `.vcf.gz` files.
+
+```{r}
+mu <- 1.2e-8
+gen <- 1
+afrDat<-read.table("relic.msmc2.final.txt", header=TRUE)
+plot(afrDat$left_time_boundary/mu*gen, (1/afrDat$lambda)/(2*mu), log="x",ylim=c(0,100000),
+     type="n", xlab="Years ago", ylab="effective population size")
+lines(afrDat$left_time_boundary/mu*gen, (1/afrDat$lambda)/(2*mu), type="s", col="red")
+legend("topright", legend= "Relic", col=c("red", "blue"), lty=c(1, 1))
+```
