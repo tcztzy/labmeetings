@@ -1,4 +1,3 @@
-Presentations in lab meetings
------------------------------
+# Presentations in lab meetings
 
 This repository store my presentations in my lab meetings (seminar).

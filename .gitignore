@@ -1,4 +1,10 @@
+.obsidian
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
+*.pptx
+*.tex
+.python-version
+_build/
+.DS_store

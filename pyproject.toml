@@ -1,0 +1,13 @@
+[project]
+name = "labmeetings"
+version = "2022.10.8"
+dependencies = [
+    "matplotlib",      # plotting
+    "matplotlib-venn", # Venn plot
+    "missingno",       # plot missing data
+    "myst-nb",         # Markdown
+    "pandas",          # data processing
+    "seaborn",         # plotting
+    "sphinx",          # documentation
+    "sphinx-revealjs", # for presentation
+]
